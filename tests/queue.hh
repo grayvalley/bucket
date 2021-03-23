@@ -63,7 +63,7 @@ public:
         m_queue.pop();
     }
 
-    // Provides only basic exception safety guarantee when RVO is not applied.
+
     T pop()
     {
         std::unique_lock<std::mutex> lock(m_mutex);
@@ -82,7 +82,7 @@ public:
         return m_pollable;
     }
 
-    bool make_non_pollable(){
+    void make_non_pollable(){
         std::unique_lock<std::mutex> lock(m_stop_mutex);
         m_pollable = false;
     }

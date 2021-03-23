@@ -1,12 +1,10 @@
-//
-// Created by juhhel on 22/03/2021.
-//
-
 #ifndef TOKENBUCKET_TOKENBUCKET_HH
 #define TOKENBUCKET_TOKENBUCKET_HH
 
 #include <cstdint>
 #include <chrono>
+
+#include <grayvalley/common/Macros.hh>
 
 namespace GVT {
     class TokenBucket {
@@ -17,7 +15,11 @@ namespace GVT {
         clock::duration mAvailable{};
         clock::duration mCapacity{std::chrono::seconds(1)};
     public:
-        TokenBucket(uint64_t rate);
+        DELETE_DEFAULT_CTOR(TokenBucket);
+        PREVENT_COPY(TokenBucket);
+        PREVENT_MOVE(TokenBucket);
+    public:
+        explicit TokenBucket(uint64_t rate);
     public:
         void refill();
         bool tryRemove(uint64_t tokens);

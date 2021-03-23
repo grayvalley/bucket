@@ -8,7 +8,6 @@
 
 #include <gtest/gtest.h>
 
-
 #include <grayvalley/TokenBucket/TokenBucket.hh>
 
 using namespace std::chrono_literals;
