@@ -7,4 +7,8 @@ add_library(TokenBucket INTERFACE)
 
 target_include_directories(TokenBucket INTERFACE inc/)
 
+add_subdirectory(common)
+
+target_link_libraries(TokenBucket INTERFACE common)
+
 add_subdirectory(tests)
