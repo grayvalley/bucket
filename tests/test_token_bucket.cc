@@ -1,8 +1,3 @@
-//
-// Created by juhhel on 22/03/2021.
-//
-
-#include <grayvalley/TokenBucket/TokenBucket.hh>
 
 #include <iostream>
 #include <thread>
@@ -11,12 +6,24 @@
 
 #include "queue.hh"
 
+#include <gtest/gtest.h>
 
 
-int main(){
+#include <grayvalley/TokenBucket/TokenBucket.hh>
 
-    using namespace std::chrono_literals;
+using namespace std::chrono_literals;
+
+
+TEST(TokenBucketTests, TestAverageRateLimiting){
+
+
+    int target_msg_rate = 10; // messages per second
+
+    GVT::TokenBucket bucket(target_msg_rate);
+
     ThreadSafeQueue<uint64_t> queue;
+
+    double calculated_rate = 0;
 
     auto producer = [&queue](){
 
@@ -24,32 +31,34 @@ int main(){
         std::mt19937 rgen(rdev());
         std::uniform_int_distribution<int> dist(1,2); //(inclusive, inclusive)
 
-        while(queue.is_pollable()){
+        while (queue.is_pollable()){
             uint64_t burst = dist(rgen);
             queue.push(burst);
             std::this_thread::sleep_for(1ms);
         }
     };
 
-    auto consumer = [&queue](){
-        GVT::TokenBucket bucket(20);
+    auto consumer = [&queue, &bucket, &calculated_rate](){
         uint64_t counter = 0;
         uint64_t popped = 0;
         auto start = std::chrono::system_clock::now();
-        while(counter < 100) {
+        while (queue.is_pollable()) {
             bool success = queue.try_pop(popped);
             if (success) {
                 bool valid = bucket.request(popped);
-                std::cout << "valid: " << valid << " for: " << popped << std::endl;
                 if (valid) {
                     counter += popped;
+                    if (counter >= 200){
+                        queue.make_non_pollable();
+                    }
                 }
             }
         }
-            auto end = std::chrono::system_clock::now();
-            auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start);
 
-            std::cout << "Messages per second: " << counter / (double) duration.count();
+        auto end = std::chrono::system_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start);
+
+        calculated_rate = counter / (double) duration.count();
 
     };
 
@@ -59,4 +68,11 @@ int main(){
     p.join();
     c.join();
 
+
+    ASSERT_DOUBLE_EQ(10.0, calculated_rate);
+}
+
+int main(int argc, char **argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
