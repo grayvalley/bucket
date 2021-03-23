@@ -48,7 +48,7 @@ TEST(TokenBucketTests, TestAverageRateLimiting){
                 bool valid = bucket.request(popped);
                 if (valid) {
                     counter += popped;
-                    if (counter >= 500){
+                    if (counter >= 200){
                         queue.make_non_pollable();
                     }
                 }
