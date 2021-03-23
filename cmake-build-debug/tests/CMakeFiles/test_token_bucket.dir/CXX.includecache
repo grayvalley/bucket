@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../inc/grayvalley/TokenBucket/TokenBucket.hh
+cstdint
+-
+chrono
+-
+
+C:/Users/juhhel/CLionProjects/tokenBucket/tests/queue.hh
+queue
+-
+mutex
+-
+condition_variable
+-
+
+C:/Users/juhhel/CLionProjects/tokenBucket/tests/test_token_bucket.cc
+grayvalley/TokenBucket/TokenBucket.hh
+-
+iostream
+-
+thread
+-
+chrono
+-
+random
+-
+queue.hh
+C:/Users/juhhel/CLionProjects/tokenBucket/tests/queue.hh
+
