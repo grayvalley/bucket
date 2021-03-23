@@ -78,8 +78,13 @@ public:
     }
 
     bool is_pollable(){
-        std::unique_lock<std::mutex> lock(m_mutex);
+        std::unique_lock<std::mutex> lock(m_stop_mutex);
         return m_pollable;
+    }
+
+    bool make_non_pollable(){
+        std::unique_lock<std::mutex> lock(m_stop_mutex);
+        m_pollable = false;
     }
 
 private:
