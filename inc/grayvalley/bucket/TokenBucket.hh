@@ -1,5 +1,5 @@
-#ifndef TOKENBUCKET_TOKENBUCKET_HH
-#define TOKENBUCKET_TOKENBUCKET_HH
+#ifndef GVT_TOKENBUCKET_HH
+#define GVT_TOKENBUCKET_HH
 
 #include <cstdint>
 #include <chrono>
@@ -22,7 +22,7 @@ namespace GVT {
         explicit TokenBucket(uint64_t rate);
     public:
         void refill();
-        bool tryRemove(uint64_t tokens);
+        bool try_remove(uint64_t tokens);
         bool request(uint64_t tokens);
     };
 }
@@ -41,7 +41,7 @@ namespace GVT {
 }
 
 namespace GVT {
-    bool TokenBucket::tryRemove(uint64_t tokens){
+    bool TokenBucket::try_remove(uint64_t tokens){
         auto requested = tokens * clock::duration(std::chrono::seconds(1)) / mRate;
         if (requested <= mAvailable) {
             mAvailable -= requested;
@@ -55,9 +55,9 @@ namespace GVT {
 namespace GVT {
     bool TokenBucket::request(uint64_t tokens){
         refill();
-        return tryRemove(tokens);
+        return try_remove(tokens);
     }
 }
 
 
-#endif //TOKENBUCKET_TOKENBUCKET_HH
+#endif //GVT_TOKENBUCKET_HH
