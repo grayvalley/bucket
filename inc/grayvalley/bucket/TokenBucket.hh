@@ -8,7 +8,7 @@
 
 namespace GVT {
     class TokenBucket {
-        using clock = std::chrono::steady_clock;
+        using clock = std::chrono::high_resolution_clock;
     private:
         uint64_t mRate;
         clock::time_point mLastRefill{clock::now()};
